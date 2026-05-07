@@ -43,7 +43,7 @@ export async function scan(args: string[]): Promise<void> {
     ? [createAdapter(options.agent)]
     : allAdapters();
 
-  const tally: Record<string, number> = {};
+  const groupTally: Record<string, number> = {};
   const severityCounts: Record<Severity, number> = {
     mild: 0,
     moderate: 0,
@@ -67,7 +67,7 @@ export async function scan(args: string[]): Promise<void> {
         agentSwears += result.count;
 
         for (const match of result.matches) {
-          tally[match.word] = (tally[match.word] ?? 0) + 1;
+          groupTally[match.group] = (groupTally[match.group] ?? 0) + 1;
           severityCounts[match.severity]++;
         }
       }
@@ -107,11 +107,11 @@ export async function scan(args: string[]): Promise<void> {
   }
 
   if (totalSwears > 0) {
-    const sorted = Object.entries(tally).sort(([, a], [, b]) => b - a);
+    const sorted = Object.entries(groupTally).sort(([, a], [, b]) => b - a);
     console.log("");
     console.log("  top words:");
-    for (const [word, count] of sorted.slice(0, 10)) {
-      console.log(`    ${word.padEnd(15)} ${count}x`);
+    for (const [group, count] of sorted.slice(0, 10)) {
+      console.log(`    ${group.padEnd(15)} ${count}x`);
     }
   }
 
