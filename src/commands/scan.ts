@@ -1,5 +1,5 @@
 import { allAdapters, createAdapter } from "../adapters/index";
-import { detect, type Severity } from "../detector/index";
+import { detect } from "../detector/index";
 
 interface ScanOptions {
   agent?: string;
@@ -45,11 +45,7 @@ export async function scan(args: string[]): Promise<void> {
 
   const groupTally: Record<string, number> = {};
   const variantTally: Record<string, Record<string, number>> = {};
-  const severityCounts: Record<Severity, number> = {
-    mild: 0,
-    moderate: 0,
-    strong: 0,
-  };
+
   let totalMessages = 0;
   let totalSwears = 0;
   const perAgent: Record<string, { messages: number; swears: number }> = {};
@@ -69,7 +65,6 @@ export async function scan(args: string[]): Promise<void> {
 
         for (const match of result.matches) {
           groupTally[match.group] = (groupTally[match.group] ?? 0) + 1;
-          severityCounts[match.severity]++;
 
           if (!variantTally[match.group]) variantTally[match.group] = {};
           variantTally[match.group][match.word] =
@@ -91,13 +86,7 @@ export async function scan(args: string[]): Promise<void> {
   console.log(`  messages scanned:  ${totalMessages}`);
   console.log(`  total swears:      ${totalSwears}`);
 
-  if (totalSwears > 0) {
-    console.log("");
-    console.log("  severity:");
-    console.log(`    strong:    ${severityCounts.strong}`);
-    console.log(`    moderate:  ${severityCounts.moderate}`);
-    console.log(`    mild:      ${severityCounts.mild}`);
-  }
+
 
   const activeAgents = Object.entries(perAgent);
   if (activeAgents.length > 1) {
