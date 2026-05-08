@@ -5,10 +5,10 @@ const COMMANDS: Record<string, (args: string[]) => Promise<void>> = {
 };
 
 function usage(): void {
-  console.log(`swearjar — count how many times you swear at your coding agents
+  console.log(`devrage — count how many times you swear at your coding agents
 
 Usage:
-  swearjar <command> [options]
+  devrage <command> [options]
 
 Commands:
   scan          Scan sessions for profanity
@@ -18,9 +18,9 @@ Options:
   --version     Show version
 
 Examples:
-  swearjar scan
-  swearjar scan --agent claude
-  swearjar scan --since 2025-01-01`);
+  devrage scan
+  devrage scan --agent claude
+  devrage scan --since 2025-01-01`);
 }
 
 async function main(): Promise<void> {

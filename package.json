@@ -1,10 +1,10 @@
 {
-  "name": "swearjar",
+  "name": "devrage",
   "version": "0.0.1",
   "description": "Count how many times you swear at your coding agents",
   "type": "module",
   "bin": {
-    "swearjar": "./dist/cli.js"
+    "devrage": "./dist/cli.js"
   },
   "exports": {
     ".": {

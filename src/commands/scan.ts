@@ -23,7 +23,7 @@ function parseArgs(args: string[]): ScanOptions {
         }
       }
     } else if (arg === "--help" || arg === "-h") {
-      console.log(`swearjar scan — scan sessions for profanity
+      console.log(`devrage scan — scan sessions for profanity
 
 Options:
   --agent, -a <name>   Scan only a specific agent (claude, codex, opencode, amp, cline, zed)
@@ -66,9 +66,8 @@ export async function scan(args: string[]): Promise<void> {
         for (const match of result.matches) {
           groupTally[match.group] = (groupTally[match.group] ?? 0) + 1;
 
-          if (!variantTally[match.group]) variantTally[match.group] = {};
-          variantTally[match.group][match.word] =
-            (variantTally[match.group][match.word] ?? 0) + 1;
+          const variants = (variantTally[match.group] ??= {});
+          variants[match.word] = (variants[match.word] ?? 0) + 1;
         }
       }
     }
@@ -80,7 +79,7 @@ export async function scan(args: string[]): Promise<void> {
 
   // Report
   console.log("");
-  console.log("  swearjar report");
+  console.log("  devrage report");
   console.log("  ===============");
   console.log("");
   console.log(`  messages scanned:  ${totalMessages}`);

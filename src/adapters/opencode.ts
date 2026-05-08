@@ -57,7 +57,7 @@ export function opencodeAdapter(): Adapter {
         db = new (Ctor as unknown as new (...args: unknown[]) => import("better-sqlite3").Database)(dbPath, { readonly: true });
       } catch {
         console.warn(
-          "swearjar: better-sqlite3 not available, skipping OpenCode sessions",
+          "devrage: better-sqlite3 not available, skipping OpenCode sessions",
         );
         return;
       }
