@@ -1,6 +1,47 @@
 import { allAdapters, createAdapter } from "../adapters/index";
 import { detect } from "../detector/index";
 
+const SPINNER_MESSAGES = [
+  "Tallying the damage",
+  "Reviewing your outbursts",
+  "Judging your vocabulary",
+  "Computing your shame",
+  "Cataloging the profanity",
+  "Measuring your frustration",
+  "Assessing the verbal carnage",
+  "Quantifying your displeasure",
+  "Auditing your language",
+  "Tabulating regrets",
+];
+
+function createSpinner() {
+  let messageIdx = 0;
+  let dotCount = 0;
+  let timer: ReturnType<typeof setInterval> | null = null;
+
+  return {
+    start() {
+      messageIdx = Math.floor(Math.random() * SPINNER_MESSAGES.length);
+      timer = setInterval(() => {
+        dotCount = (dotCount + 1) % 4;
+        const msg = SPINNER_MESSAGES[messageIdx % SPINNER_MESSAGES.length];
+        const dots = ".".repeat(dotCount || 1);
+        process.stdout.write(`\r  ${msg}${dots}   `);
+      }, 300);
+    },
+    update() {
+      messageIdx++;
+    },
+    stop() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      process.stdout.write("\r" + " ".repeat(60) + "\r");
+    },
+  };
+}
+
 interface ScanOptions {
   agent?: string;
   since?: Date;
@@ -43,6 +84,9 @@ export async function scan(args: string[]): Promise<void> {
     ? [createAdapter(options.agent)]
     : allAdapters();
 
+  const spinner = createSpinner();
+  spinner.start();
+
   const groupTally: Record<string, number> = {};
   const variantTally: Record<string, Record<string, number>> = {};
 
@@ -53,6 +97,7 @@ export async function scan(args: string[]): Promise<void> {
   for (const adapter of adapters) {
     let agentMessages = 0;
     let agentSwears = 0;
+    spinner.update();
 
     for await (const message of adapter.messages({ since: options.since })) {
       totalMessages++;
@@ -76,6 +121,8 @@ export async function scan(args: string[]): Promise<void> {
       perAgent[adapter.name] = { messages: agentMessages, swears: agentSwears };
     }
   }
+
+  spinner.stop();
 
   // Report
   console.log("");
