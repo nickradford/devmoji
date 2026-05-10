@@ -3,6 +3,16 @@ import { execSync } from "node:child_process";
 
 const watch = process.argv.includes("--watch");
 
+// Regenerate emoji group data from unicode.org before building.
+// This fetches the latest emoji-test.txt and generates
+// src/detector/emoji-groups.g.ts (gitignored).
+function generateEmojiGroups() {
+  execSync("bun run scripts/generate-emoji-groups.ts", {
+    stdio: "inherit",
+    cwd: import.meta.dirname,
+  });
+}
+
 /** @type {esbuild.BuildOptions} */
 const cliOptions = {
   entryPoints: ["src/cli.ts"],
@@ -21,6 +31,7 @@ if (watch) {
   await ctx.watch();
   console.log("watching...");
 } else {
+  generateEmojiGroups();
   await esbuild.build(cliOptions);
   execSync("tsc -p tsconfig.lib.json", { stdio: "inherit" });
   console.log("build complete");

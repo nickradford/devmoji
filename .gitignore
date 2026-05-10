@@ -1,3 +1,6 @@
 node_modules/
 dist/
 *.tsbuildinfo
+
+# Generated emoji group data (built from unicode.org/Public/emoji/latest/emoji-test.txt)
+src/detector/emoji-groups.g.ts

@@ -8,17 +8,21 @@ function usage(): void {
   console.log(`devrage — count how many times you swear at your coding agents
 
 Usage:
-  devrage <command> [options]
+  devrage [command] [options]
 
 Commands:
-  scan          Scan sessions for profanity
+  scan          Scan sessions (default)
 
 Options:
+  --emoji       Scan for emojis instead of profanity
+  --agent, -a   Scan a specific agent (claude, codex, opencode, amp, cline, zed)
+  --since, -s   Only scan messages after this date (ISO 8601)
   --help, -h    Show this help message
   --version     Show version
 
 Examples:
-  devrage scan
+  devrage
+  devrage --emoji
   devrage scan --agent claude
   devrage scan --since 2025-01-01`);
 }
